@@ -25,6 +25,14 @@ class SimonGame {
     this.modal.wrapper = document.querySelector('.websi-board-modal');
     this.modal.className = this.modal.wrapper.getAttribute('class');
     this.modal.msg = document.querySelector('.websi-board-modal__msg');
+    // games tones
+    this.tones = [
+      new Audio('tones/simon-says_tone-red.mp3'),
+      new Audio('tones/simon-says_tone-green.mp3'),
+      new Audio('tones/simon-says_tone-blue.mp3'),
+      new Audio('tones/simon-says_tone-yellow.mp3')
+    ];
+    this.tones.forEach(tone => tone.volume = 0.2);
   }
   /**
    * @description Generates random number between 0 and 4
@@ -54,13 +62,22 @@ class SimonGame {
       // delay initial lit to create blink effect when same colour appears consecutively
       setTimeout(() => {
         this.boardBtns[this.sequence[index]].className += ' active';
+        this.playTone(this.sequence[index]);
       }, 200);
       setTimeout(() => {
         this.boardBtns[this.sequence[index]].className = this.boardBtnsClass;
-        // resolve promise on light off
-        resolve(true);
+        setTimeout(() => {
+          // resolve promise on light off
+          resolve(true);
+        }, 200);
       }, 400);
     });
+  }
+  /**
+   * @description Plays the press button tone
+   */
+  playTone(n) {
+    this.tones[n].play();
   }
   /**
    * @description Checks every time a player presses a colour
@@ -76,6 +93,8 @@ class SimonGame {
                     ? 1
                     : color === 'blue'
                       ? 2 : 3;
+    // play the tone to accompany button press
+    this.playTone(move);
     // check player move against generated sequence
     if (this.sequence[this.playerMove] !== move) {
       this.playerLives--;
@@ -83,8 +102,11 @@ class SimonGame {
       if (this.playerLives > 0) {
         console.log(`Like spidy says: everybody gets one.`);
         // player repeating so go back one move
+        this.playerTurn = false;
         this.playerMove = 0;
-        this.playSequence();
+        setTimeout(() => {
+          this.playSequence();
+        }, 600);
       }else{
         this.endingModal(true);
         this.resetGame();
@@ -95,7 +117,9 @@ class SimonGame {
       // start new round if player guessed all moves
       if (this.playerMove === this.sequence.length) {
         this.playerTurn = false;
-        this.playRound();
+        setTimeout(() => {
+          this.playRound();
+        }, 600);
       }
     }
   }
@@ -165,4 +189,5 @@ function letsPlay() {;
   });
 }
 
+// activate game dashboard
 letsPlay();
