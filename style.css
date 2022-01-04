@@ -1,0 +1,124 @@
+* {
+  box-sizing: border-box;
+  position: relative;
+  border: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+}
+
+:root {
+  --btn-a-color: red;
+  --btn-b-color: green;
+  --btn-c-color: blue;
+  --btn-d-color: yellow;
+  font-family: sans-serif;
+  font-size: 18px;
+}
+
+body {
+  padding: 0 8px;
+}
+
+/* navigation */
+.websi-navbar {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+/* game dashboard */
+.websi-dashboard {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-around;
+  margin: 16px auto;
+  max-width: 400px;
+  width: 100%;
+}
+.websi-dashboard-btns {
+  display: block;
+  padding: 8px 16px;
+  font-size: 1.2rem;
+}
+.websi-dashboard-score {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* game board */
+.websi-board-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.websi-board {
+  display: grid;
+  grid-template-columns: minmax(50%, 200px) minmax(50%, 200px);
+  grid-template-rows: minmax(50%, 200px) minmax(50%, 200px);
+  height: calc(100vw - 16px);
+  max-height: 400px;
+  max-width: 400px;
+  width: 100%;
+  background: #000;
+}
+.websi-board-btns {
+  display: block;
+  height: 100%;
+  width: 100%;
+  opacity: 0.6;
+  transition: opacity 100ms;
+}
+/* JS and HTML use this to activate the button colour */
+.websi-board-btns:active,
+.websi-board-btns.active {
+  opacity: 1;
+}
+#websiBtnA {
+  background: red;
+}
+#websiBtnB {
+  background: lime;
+}
+#websiBtnC {
+  background: blue;
+}
+#websiBtnD {
+  background: yellow;
+}
+
+/* game board modal */
+.websi-board-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,.8);
+  opacity: 0;
+  transform: translateX(-1000px);
+  transition: opacity 400ms ease-out .100ms;
+}
+.websi-board-modal.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+.websi-board-modal__body {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: orange;
+}
+.websi-board-modal__title {
+  font-size: 1.6rem
+}
+.websi-board-modal__msg {
+  font-size: 2.4rem;
+  font-weight: bold;
+}
