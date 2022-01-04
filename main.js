@@ -5,11 +5,13 @@
 class SimonGame {
   constructor(scoreboard = false) {
     // board settings
-    this.active = false,
+    this.simonAwake = false,
     this.sequence = [];
     this.playerMove = 0;
     this.playerLives = 2;
+    this.playerTurn = false;
     this.round = 0;
+    this.modal = {};
     // optional extra in case you want to display score on browser.
     this.scoreboard = scoreboard;
     // prep the game board
@@ -19,7 +21,10 @@ class SimonGame {
     this.boardBtns.forEach(btn => {
       btn.addEventListener('click', this.checkPlayerMove.bind(this));
     });
-
+    // game modal
+    this.modal.wrapper = document.querySelector('.websi-board-modal');
+    this.modal.className = this.modal.wrapper.getAttribute('class');
+    this.modal.msg = document.querySelector('.websi-board-modal__msg');
   }
   /**
    * @description Generates random number between 0 and 4
@@ -37,6 +42,8 @@ class SimonGame {
       // wait for each light to turn on and off
       await this.lightUp(i);
     }
+    // only after showing sequence allow player to take turn
+    this.playerTurn = true;
   }
   /**
    * @description Update the class name on buttons to create blinking effect
@@ -59,6 +66,8 @@ class SimonGame {
    * @description Checks every time a player presses a colour
    */
   checkPlayerMove(elem) {
+    // only check move on players turn
+    if (!this.playerTurn) return;
     // map color name to integer value
     const color = elem.srcElement.dataset.websiBtn;
     const move = (color === 'red')
@@ -77,7 +86,7 @@ class SimonGame {
         this.playerMove = 0;
         this.playSequence();
       }else{
-        // TODO: CLEAR THE GAME DATA AND REVEAL LOOSE MODAL
+        this.endingModal(true);
         this.resetGame();
       }
     }else{
@@ -85,8 +94,21 @@ class SimonGame {
       this.playerMove++;
       // start new round if player guessed all moves
       if (this.playerMove === this.sequence.length) {
+        this.playerTurn = false;
         this.playRound();
       }
+    }
+  }
+  /**
+   * @description Reveals modal with score at end of game
+   * @param {boolean} display - whether to display(true) or hide modal
+   */
+  endingModal(display) {
+    if (display) {
+      this.modal.msg.textContent = this.round - 1;
+      this.modal.wrapper.className += ' active';
+    }else{
+      this.modal.wrapper.className = this.modal.className;
     }
   }
   /**
@@ -103,13 +125,17 @@ class SimonGame {
     this.playerLives = 2;
     this.sequence = [];
     this.round = 0;
-    this.active = false;
     this.scoreboard.textContent = 0;
+    this.simonAwake = false;
   }
   /**
    * @description Does a game round
    */
   playRound() {
+    if (this.round === 0) {
+      this.simonAwake = true;
+      this.endingModal(false);
+    }
     this.round++;
     // reset the player move on every round start
     this.playerMove = 0;
@@ -128,6 +154,7 @@ class SimonGame {
 function letsPlay() {;
   // dashboard
   const dashboardBtn = document.querySelector('.websi-dashboard-btns');
+  // get element to display game score and pass it to new game instance
   const scoreboard = document.querySelector('.websi-dashboard-score');
   // create new game
   const simonSays = new SimonGame(scoreboard);
@@ -139,14 +166,3 @@ function letsPlay() {;
 }
 
 letsPlay();
-
-/**
-onclick="document.getElementById('horseNoise').play();">PRESS</button>
-
-<audio id="horseNoise" preload="auto">
-  <source src="horse.ogg" type="audio/ogg">
-  <source src="horse.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-
-*/
