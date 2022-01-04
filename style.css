@@ -155,7 +155,7 @@ footer a {
   width: 100%;
   background: rgba(0, 51, 51,.9);
   opacity: 0;
-  transform: translateX(-1000px);
+  transform: translateX(-10000px);
   transition: opacity 400ms ease-out .100ms;
 }
 .websi-board-modal.active {
