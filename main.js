@@ -30,9 +30,10 @@ class SimonGame {
       new Audio('tones/simon-says_tone-red.mp3'),
       new Audio('tones/simon-says_tone-green.mp3'),
       new Audio('tones/simon-says_tone-blue.mp3'),
-      new Audio('tones/simon-says_tone-yellow.mp3')
+      new Audio('tones/simon-says_tone-yellow.mp3'),
+      new Audio('tones/simon-says_tone-wrong.mp3')
     ];
-    this.tones.forEach(tone => tone.volume = 0.2);
+    this.tones.forEach(tone => tone.volume = 0.4);
   }
   /**
    * @description Generates random number between 0 and 4
@@ -97,6 +98,7 @@ class SimonGame {
     this.playTone(move);
     // check player move against generated sequence
     if (this.sequence[this.playerMove] !== move) {
+      this.tones[4].play();
       this.playerLives--;
       // player gets 1 more go if they mess up
       if (this.playerLives > 0) {
